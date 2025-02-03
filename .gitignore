@@ -52,4 +52,4 @@ application.properties
 .env.development
 
 # dist
-/springboot/database/src/main/resources/static
+springboot/database/src/main/resources/static/
