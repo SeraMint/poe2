@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.GenerationType;
 
-@Entity(name = "mapping_item_tags")
+@Entity
 @Table(name = "mapping_item_tags", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "item_id", "tag_id" })
 })

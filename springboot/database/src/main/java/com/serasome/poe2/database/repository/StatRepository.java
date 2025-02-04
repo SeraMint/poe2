@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.serasome.poe2.database.entity.Tag;
+import com.serasome.poe2.database.entity.Stat;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
-    Optional<Tag> findByName(String name);
+public interface StatRepository extends JpaRepository<Stat, Long> {
+    Optional<Stat> findByContents(String contents);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Tag SET used = used + 1 WHERE id = :tagId")
-    public void incrementUsedCount(@Param("tagId") Long tagId);
+    @Query("UPDATE Stat SET used = used + 1 WHERE id = :statId")
+    public void incrementUsedCount(@Param("statId") Long statId);
 }

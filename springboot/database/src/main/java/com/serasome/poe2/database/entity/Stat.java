@@ -20,22 +20,22 @@ import jakarta.persistence.GenerationType;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "tags")
-public class Tag {
+@Table(name = "stats")
+public class Stat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String name;
+    @Column(nullable = false)
+    private String contents;
 
     private int used = 0;
 
     @Column(name = "delete_yn")
     private boolean deleteYn = false;
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MappingItemTags> mappingItemTags = new ArrayList<>();
+    @OneToMany(mappedBy = "stat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MappingItemStats> mappingItemTags = new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

@@ -18,15 +18,29 @@ repositories {
 }
 
 dependencies {
+	// 스프링 부트 JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// 스프링 부트 기본 웹서비스
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// 롬복 엔티티 어노테이션
 	implementation 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// 엔티티 정규식 어노테이션
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 스프링 부트 개발 시 hot reload 때문에 사용하였으나 vscode에서 정상 동작 X	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// mariadb 클라이언트
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+	// 스프링 부트 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

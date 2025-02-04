@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Routes, Route, Outlet, NavLink, Link } from 'react-router';
 import reactLogo from './assets/react.svg';
 import './App.css';
-import { Test } from './page/test';
+import { Test } from './page/Test';
 import { NotFound } from './page/NotFound';
 
 function Layout() {

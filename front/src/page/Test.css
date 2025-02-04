@@ -1,0 +1,8 @@
+.item {
+  display: flex;
+  justify-content: space-around;
+}
+
+.item ol {
+  box-shadow: 0 0 1px 1px #dddddd;
+}
