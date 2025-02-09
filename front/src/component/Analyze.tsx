@@ -312,10 +312,15 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
     initialData: () => {
       const filterData = localStorage.getItem('filterData');
 
-      if (!!filterData) {
-        Object.assign(filter, JSON.parse(filterData));
-        return null;
-      } else return undefined;
+      if (!!filterData) Object.assign(filter, JSON.parse(filterData));
+
+      return filter.category.length === 0 ||
+        filter.items.length === 0 ||
+        filter.rarity.length === 0 ||
+        filter.stats.length === 0 ||
+        filter.uniques.length === 0
+        ? undefined
+        : null;
     }
   });
 

@@ -11,7 +11,7 @@ public class KomoranConfig {
 
     @Bean
     public Komoran komoran() {
-        return new Komoran(DEFAULT_MODEL.FULL);
+        return new Komoran(DEFAULT_MODEL.LIGHT);
     }
 
 }

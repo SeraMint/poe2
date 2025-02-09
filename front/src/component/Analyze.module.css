@@ -1,15 +1,13 @@
 .dropArea {
   margin: 0 auto;
   min-width: 100px;
-  width: 50%;
-  min-height: 100px;
-  aspect-ratio: 2;
+  width: 90%;
   display: flex;
   justify-items: center;
   align-items: center;
   flex-direction: column;
   padding: 10px;
-  border: dashed 2px #dddddd;
+  border: dashed 4px #dddddd;
 }
 
 .dropArea.disable {
