@@ -1,10 +1,4 @@
-import React, {
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { ImageLike, createWorker } from 'tesseract.js';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -215,7 +209,7 @@ const analyzing = async (text: Array<string>) => {
 
   const [data1, data2, data3] = await parse(text);
 
-  console.log(data1, data2, data3);
+  //console.log(data1, data2, data3);
   data1.some((d, i) => {
     if (d.similar[0] && d.similar[0].type === 'category') {
       currentParam.category = d.similar[0].text;
@@ -288,7 +282,7 @@ const analyzing = async (text: Array<string>) => {
       ? 'magic'
       : 'normal';
 
-  console.log(currentParam);
+  //console.log(currentParam);
   return currentParam;
 };
 
@@ -297,7 +291,7 @@ const onComplete = async (data: ResultFile, cb?: () => void) => {
   const image = new Image();
   image.onload = async () => {
     const text = await recognize(image);
-    console.log(text);
+    //console.log(text);
     const param = await analyzing(text.split(/\n/).filter((s) => !!s.trim()));
     if (param) onGlobalItemChange({ origin: data.origin, param });
     URL.revokeObjectURL(objectUrl);
@@ -339,7 +333,7 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
     }
   }, [isSuccess]);
 
-  const injectFile = useCallback((file?: File) => {
+  const injectFile = (file?: File) => {
     if (!file) return;
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
@@ -349,29 +343,35 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
     processRef.current.files = dataTransfer.files;
     const event = new Event('change', { bubbles: true });
     processRef.current.dispatchEvent(event);
-  }, []);
+  };
 
-  const onDrop = useCallback((event: DragEvent) => {
+  const onDrop = (event: DragEvent) => {
     event.preventDefault();
+
+    if (disable) return;
 
     injectFile(event.dataTransfer?.files?.[0]);
-  }, []);
+  };
 
-  const onDragOver = useCallback((event: DragEvent) => {
+  const onDragOver = (event: DragEvent) => {
     event.preventDefault();
-  }, []);
+  };
 
-  const onPaste = useCallback((event: ClipboardEvent) => {
+  const onPaste = (event: ClipboardEvent) => {
     event.preventDefault();
+
+    if (disable) return;
 
     injectFile(event.clipboardData?.files?.[0]);
-  }, []);
+  };
 
-  const onClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+  const onClick = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
 
+    if (disable) return;
+
     processRef.current?.click();
-  }, []);
+  };
 
   useEffect(() => {
     onGlobalItemChange = onItemChange;
