@@ -7,6 +7,8 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -18,25 +20,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "category")
-public class Category {
+@Table(name = "users")
+public class User {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(name = "delete_yn")
-    private boolean deleteYn = false;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> mappingItemTags = new ArrayList<>();
+    @Column
+    private String account;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = true)
     private LocalDateTime updatedAt;
+
+    @Column(name = "delete_yn")
+    private boolean deleteYn = false;
 
     @PrePersist
     public void prePersist() {
@@ -47,4 +47,7 @@ public class Category {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 }

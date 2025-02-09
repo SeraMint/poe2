@@ -18,11 +18,13 @@ import com.serasome.poe2.database.dto.PageParamDto;
 import com.serasome.poe2.database.entity.Item;
 import com.serasome.poe2.database.entity.Stat;
 import com.serasome.poe2.database.entity.Tag;
+import com.serasome.poe2.database.entity.User;
 import com.serasome.poe2.database.service.ItemService;
 import com.serasome.poe2.database.service.MappingItemStatsService;
 import com.serasome.poe2.database.service.MappingItemTagsService;
 import com.serasome.poe2.database.service.StatService;
 import com.serasome.poe2.database.service.TagService;
+import com.serasome.poe2.database.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -34,15 +36,17 @@ public class ItemController {
     private final MappingItemStatsService mappingItemStatsService;
     private final TagService tagService;
     private final MappingItemTagsService mappingItemTagsService;
+    private final UserService userService;
 
     public ItemController(ItemService itemService, StatService statService,
             MappingItemStatsService mappingItemStatsService, TagService tagService,
-            MappingItemTagsService mappingItemTagsService) {
+            MappingItemTagsService mappingItemTagsService, UserService userService) {
         this.itemService = itemService;
         this.statService = statService;
         this.mappingItemStatsService = mappingItemStatsService;
         this.tagService = tagService;
         this.mappingItemTagsService = mappingItemTagsService;
+        this.userService = userService;
     }
 
     @GetMapping("list")
@@ -58,21 +62,27 @@ public class ItemController {
     @PostMapping("create")
     public ItemDto createItem(@Valid @RequestBody ItemCreateDto param) {
         Set<Long> tagIds = new HashSet<>();
+        Set<String> tagNames = new HashSet<>();
         Set<Long> statIds = new HashSet<>();
 
         param.getStats().forEach(stat -> {
             Stat newStat = new Stat();
             newStat.setContents(stat);
             statIds.add(statService.setStat(newStat).getId());
+            System.out.println(statService.analyzeStat(newStat));
+            tagNames.addAll(statService.analyzeStat(newStat));
         });
 
-        param.getTagNames().forEach(tagName -> {
+        tagNames.forEach(tagName -> {
             Tag newTag = new Tag();
             newTag.setName(tagName);
             tagIds.add(tagService.setTag(newTag).getId());
         });
-        Item item = new Item(param.getCategoryId());
 
+        User user = userService.setUser(param.getAccount());
+        Item item = new Item();
+
+        item.setUser(user);
         item.setId(itemService.createItem(item).getId());
 
         statIds.forEach(statId -> {

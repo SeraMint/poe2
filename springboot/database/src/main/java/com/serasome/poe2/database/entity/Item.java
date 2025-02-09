@@ -31,12 +31,15 @@ public class Item {
 
     private int view = 0;
 
-    @Column(name = "delete_yn")
-    private boolean deleteYn = false;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column
+    private String currency;
+
+    @Column
+    private int quantity;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MappingItemStats> mappingItemStats = new ArrayList<>();
@@ -50,6 +53,9 @@ public class Item {
     @Column(nullable = true)
     private LocalDateTime updatedAt;
 
+    @Column(name = "delete_yn")
+    private boolean deleteYn = false;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -58,10 +64,5 @@ public class Item {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Item(String categoryId) {
-        this.category = new Category();
-        this.category.setId(categoryId);
     }
 }

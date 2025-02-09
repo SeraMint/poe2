@@ -15,6 +15,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -31,6 +32,9 @@ dependencies {
 
 	// 엔티티 정규식 어노테이션
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 한국어 형태소 분석기
+	implementation 'com.github.shin285:KOMORAN:3.3.9'
 
 	// 스프링 부트 개발 시 hot reload 때문에 사용하였으나 vscode에서 정상 동작 X	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -1,0 +1,23 @@
+.dropArea {
+  margin: 0 auto;
+  min-width: 100px;
+  width: 50%;
+  min-height: 100px;
+  aspect-ratio: 2;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  border: dashed 2px #dddddd;
+}
+
+.dropArea.disable {
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.svg {
+  display: none;
+}

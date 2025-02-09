@@ -10,9 +10,9 @@ import com.serasome.poe2.database.entity.Item;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT DISTINCT i " +
             "FROM Item i " +
-            "JOIN i.category c " +
             "LEFT JOIN i.mappingItemStats mis ON i.id = mis.item.id " +
             "LEFT JOIN mis.stat " +
+            "LEFT JOIN mis.values " +
             "LEFT JOIN i.mappingItemTags mit ON i.id = mit.item.id " +
             "LEFT JOIN mit.tag")
     Page<Item> findAllWithTags(Pageable pageable);
