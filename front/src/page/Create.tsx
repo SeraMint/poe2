@@ -35,44 +35,49 @@ export const Create = () => {
     statValues: []
   });
   const onItemChange = useCallback((data: ResultData) => {
-    const ctx = canvasRef.current?.getContext('2d');
-    canvasRef.current!.width = data.origin.width;
-    canvasRef.current!.height = data.origin.height;
+    if (data.origin) {
+      const ctx = canvasRef.current?.getContext('2d');
+      canvasRef.current!.width = data.origin.width;
+      canvasRef.current!.height = data.origin.height;
 
-    ctx?.drawImage(data.origin, 0, 0);
+      ctx?.drawImage(data.origin, 0, 0);
+    }
 
     setParam(data.param);
   }, []);
 
-  const handleStaticChange = useCallback(
-    (e: React.FormEvent<HTMLInputElement>, i: number, j: number) => {
-      const updatedStaticsValues = [...(param.staticsValues ?? [])];
-      updatedStaticsValues[i][j] = isNaN(Number(e.currentTarget.value))
-        ? 0
-        : Number(e.currentTarget.value);
+  const handleStaticChange = (
+    e: React.FormEvent<HTMLInputElement>,
+    i: number,
+    j: number
+  ) => {
+    const updatedStaticsValues = [...(param.staticsValues ?? [])];
+    updatedStaticsValues[i][j] = isNaN(Number(e.currentTarget.value))
+      ? 0
+      : Number(e.currentTarget.value);
 
-      setParam({ ...param, staticsValues: updatedStaticsValues });
-    },
-    []
-  );
+    setParam({ ...param, staticsValues: updatedStaticsValues });
+  };
 
-  const handleStatChange = useCallback(
-    (e: React.FormEvent<HTMLInputElement>, i: number, j: number) => {
-      const updateStatValues = [...(param.statValues ?? [])];
-      updateStatValues[i][j] = isNaN(Number(e.currentTarget.value))
-        ? 0
-        : Number(e.currentTarget.value);
+  const handleStatChange = (
+    e: React.FormEvent<HTMLInputElement>,
+    i: number,
+    j: number
+  ) => {
+    const updateStatValues = [...(param.statValues ?? [])];
+    updateStatValues[i][j] = isNaN(Number(e.currentTarget.value))
+      ? 0
+      : Number(e.currentTarget.value);
 
-      setParam({ ...param, statValues: updateStatValues });
-    },
-    []
-  );
+    setParam({ ...param, statValues: updateStatValues });
+  };
 
   return (
-    <>
-      <h1>패스 오브 엑자일 2</h1>
-      <h2>아이템 이미지 인식기 v1.0.0</h2>
-      <Analyze onItemChange={onItemChange} />
+    <div className="px-4 pt-10 pb-24 sm:px-6 xl:pr-0">
+      <h2 className='text-3xl font-bold text-gray-900"'>
+        아이템 이미지 인식기 v1.0.0
+      </h2>
+      <Analyze className="mt-5" onItemChange={onItemChange} />
       <div className="result">
         <canvas ref={canvasRef} />
         <div className={`item ${param.rarity} ${param.category && 'show'}`}>
@@ -128,6 +133,6 @@ export const Create = () => {
           </ul>
         </div>
       </div>
-    </>
+    </div>
   );
 };

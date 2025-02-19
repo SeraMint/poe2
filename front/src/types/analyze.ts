@@ -82,6 +82,6 @@ export type FilterData = {
 };
 
 export type ResultData = {
-  origin: ImageBitmap;
+  origin?: ImageBitmap;
   param: CreateParam;
 };

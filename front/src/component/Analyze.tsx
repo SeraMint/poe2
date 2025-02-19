@@ -18,10 +18,11 @@ import AnalyzeWorker from '../worker/analyze?worker';
 // import { items as filterItems } from '../data/items.ko';
 // import { level, requires, quility, damage, range, etc } from '../data/added.ko';
 
+import { Loading } from './Loading';
 import { Process } from './Process';
-import styles from './Analyze.module.css';
 
 interface ChildProps {
+  className?: string;
   onItemChange: (data: ResultData) => void;
 }
 
@@ -209,7 +210,7 @@ const analyzing = async (text: Array<string>) => {
 
   const [data1, data2, data3] = await parse(text);
 
-  //console.log(data1, data2, data3);
+  console.log(data1, data2, data3);
   data1.some((d, i) => {
     if (d.similar[0] && d.similar[0].type === 'category') {
       currentParam.category = d.similar[0].text;
@@ -291,7 +292,7 @@ const onComplete = async (data: ResultFile, cb?: () => void) => {
   const image = new Image();
   image.onload = async () => {
     const text = await recognize(image);
-    //console.log(text);
+    console.log(text);
     const param = await analyzing(text.split(/\n/).filter((s) => !!s.trim()));
     if (param) onGlobalItemChange({ origin: data.origin, param });
     URL.revokeObjectURL(objectUrl);
@@ -300,7 +301,7 @@ const onComplete = async (data: ResultFile, cb?: () => void) => {
   image.src = objectUrl;
 };
 
-export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
+export const Analyze: React.FC<ChildProps> = ({ className, onItemChange }) => {
   const processRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
   const [disable, setDisable] = useState(true);
@@ -340,6 +341,10 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
 
   const injectFile = (file?: File) => {
     if (!file) return;
+
+    debugger;
+
+    if (file.type.indexOf('image') !== -1) return;
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
 
@@ -362,12 +367,29 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
     event.preventDefault();
   };
 
-  const onPaste = (event: ClipboardEvent) => {
+  const onPaste = async (event: ClipboardEvent) => {
     event.preventDefault();
 
     if (disable) return;
 
-    injectFile(event.clipboardData?.files?.[0]);
+    if ((event.clipboardData?.types ?? []).includes('text/plain')) {
+      let text = (event.clipboardData?.getData('text/plain') ?? '').split(
+        /--------\r\n/
+      );
+
+      text.splice(2, 1, `${text[2].replace(/\r\n/, ' ')}\n`);
+      console.log(text);
+      const param = await analyzing(
+        text
+          .join('')
+          .split(/\r\n/)
+          .slice(2)
+          .filter((s) => !!s.trim())
+      );
+
+      if (param) onGlobalItemChange({ origin: undefined, param });
+    } else if (event.clipboardData?.types.indexOf('image') !== -1)
+      injectFile(event.clipboardData?.files?.[0]);
   };
 
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -394,11 +416,10 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
       dropArea.removeEventListener('dragover', onDragOver);
       document.body.removeEventListener('paste', onPaste);
     };
-  }, []);
-  return isLoading ? (
-    <div>로딩 중...</div>
-  ) : (
+  }, [disable]);
+  return (
     <>
+      <Loading show={isLoading} />
       <Process
         ref={processRef}
         onDisable={() => {
@@ -412,7 +433,9 @@ export const Analyze: React.FC<ChildProps> = ({ onItemChange }) => {
       />
       <div
         ref={dropRef}
-        className={`${styles.dropArea} ${disable ? styles.disable : ''}`}
+        className={`${className} max-w-100 border-4 border-dashed border-gray-300 p-10 text-center cursor-pointer ${
+          disable ? 'select-none opacity-50 !cursor-progress' : ''
+        }`}
         onClick={onClick}
       >
         <p>드래그 & 드롭 또는 파일 선택</p>

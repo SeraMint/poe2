@@ -62,7 +62,7 @@ self.onmessage = (event) => {
       // if (simplify(s).indexOf('공격시화염') !== -1)
       //   console.log(simplify(s), simplify(t), s, t, rate);
 
-      if (rate >= 0.5 && dist <= 3) {
+      if (rate >= 0.5) {
         stat.similar.push({ type, text: s, rate, distance: dist, values: [] });
 
         if (rate === 1) return true;
